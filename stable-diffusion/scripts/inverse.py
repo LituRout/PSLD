@@ -371,8 +371,6 @@ def main():
     task_config = load_yaml(task_config)
 
     task_config['data']['root'] = opt.dps_path + 'data/samples/'
-    task_config['measurement']['mask_opt']['image_size'] = opt.H
-
     img = plt.imread(task_config['data']['root']+opt.file_id)
     # img = next(iter(loader))
 
@@ -414,6 +412,7 @@ def main():
         # Forward measurement model (Ax + n)
         y = operator.forward(org_image)
         y_n = noiser(y)
+        mask = None
     
 
     #########################################################
