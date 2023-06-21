@@ -9,7 +9,7 @@ The repository contains reproducible `PyTorch` source code of our paper [Solving
 
 ## Prerequisites
 The implementation is GPU-based. Single GPU (A100) is sufficient to run each experiment. Tested with 
-`torch==1.12.0 torchvision==0.13.1a0`. To reproduce the reported results, consider using the exact version of `PyTorch` and its required dependencies as other versions might be incompatible. Make sure to install all the required packages for [`/diffusion-posterior-sampling/`](https://github.com/LituRout/PSLD/tree/main/diffusion-posterior-sampling) and [`/stable-diffusion/`](https://github.com/LituRout/PSLD/tree/main/stable-diffusion). Check if the DPS sampler and Stable Diffusion sampler is working before proceeding to the next steps.
+`torch==1.12.0 torchvision==0.13.1a0`. To reproduce the reported results, consider using the exact version of `PyTorch` and its required dependencies as other versions might be incompatible. Make sure to install all the required packages for [`/diffusion-posterior-sampling/`](https://github.com/LituRout/PSLD/tree/main/diffusion-posterior-sampling) and [`/stable-diffusion/`](https://github.com/LituRout/PSLD/tree/main/stable-diffusion). Check if the DPS sampler and Stable Diffusion sampler are working before proceeding to the next steps.
 
 ## Repository structure
 All the experiments are issued in the form of pretty self-explanatory `python` codes. To execute each code, we provide shell scripts inside `stable-diffusion/run/` folder. 
