@@ -104,7 +104,7 @@ def main():
         "--prompt",
         type=str,
         nargs="?",
-        default="highest quality, visually pleasing",
+        default="",
         help="the prompt to render"
     )
     parser.add_argument(
@@ -189,7 +189,7 @@ def main():
     parser.add_argument(
         "--n_samples",
         type=int,
-        default=3,
+        default=1,
         help="how many samples to produce for each given prompt. A.k.a. batch size",
     )
     parser.add_argument(
@@ -273,23 +273,31 @@ def main():
     )
     parser.add_argument(
         "--inpainting",
-        default=True,
+        type=int,
+        default=0,
         help="inpainting",
     )
     parser.add_argument(
         "--general_inverse",
-        default=False,
+        type=int,
+        default=1,
         help="general inverse",
     )
     parser.add_argument(
         "--file_id",
         type=str,
         default='00014.png',
-        help='input image'
+        help='input image',
+    )
+    parser.add_argument(
+        "--skip_low_res",
+        action='store_true',
+        help='downsample result to 256',
     )
     ##
 
     opt = parser.parse_args()
+    # pdb.set_trace()
 
     if opt.laion400m:
         print("Falling back to LAION 400M model...")
@@ -461,7 +469,8 @@ def main():
                     # x_checked_image_torch = torch.from_numpy(x_checked_image).permute(0, 3, 1, 2)
                     
                     x_checked_image_torch = torch.from_numpy(x_samples_ddim).permute(0, 3, 1, 2)
-
+                    
+                    
                     if not opt.skip_save:
                         for x_sample in x_checked_image_torch:
                             x_sample = 255. * rearrange(x_sample.cpu().numpy(), 'c h w -> h w c')
@@ -472,6 +481,19 @@ def main():
 
                     if not opt.skip_grid:
                         all_samples.append(x_checked_image_torch)
+                    
+                    # pdb.set_trace()
+                    if not opt.skip_low_res:
+                        if not opt.skip_save:
+                            inpainted_image_low_res = f.interpolate(x_checked_image_torch.type(torch.float32), size=(opt.H//2, opt.W//2))
+                            for x_sample in inpainted_image_low_res:
+                                x_sample = 255. * rearrange(x_sample.cpu().numpy(), 'c h w -> h w c')
+                                img = Image.fromarray(x_sample.astype(np.uint8))
+                                # img = put_watermark(img, wm_encoder)
+                                img.save(os.path.join(sample_path, f"{base_count:05}_low_res.png"))
+                                base_count += 1
+
+                        
 
             if not opt.skip_grid:
                 # additionally, save as grid
