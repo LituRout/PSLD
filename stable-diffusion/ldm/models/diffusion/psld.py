@@ -78,6 +78,7 @@ class DDIMSampler(object):
                unconditional_conditioning=None,
                ip_mask = None, measurements = None, operator = None, gamma = 1, inpainting = False, omega=1,
                general_inverse = None, noiser=None,
+               ffhq256=False,
                # this has to come in the same format as the conditioning, # e.g. as encoded tokens, ...
                **kwargs
                ):
@@ -115,7 +116,8 @@ class DDIMSampler(object):
                                                     ip_mask = ip_mask, measurements = measurements, operator = operator,
                                                     gamma = gamma,
                                                     inpainting = inpainting, omega=omega,
-                                                    general_inverse = general_inverse, noiser = noiser
+                                                    general_inverse = general_inverse, noiser = noiser,
+                                                    ffhq256=ffhq256
                                                     )
         return samples, intermediates
 
@@ -128,7 +130,8 @@ class DDIMSampler(object):
                       temperature=1., noise_dropout=0., score_corrector=None, corrector_kwargs=None,
                       unconditional_guidance_scale=1., unconditional_conditioning=None,
                       ip_mask = None, measurements = None, operator = None, gamma = 1, inpainting=False, omega=1,
-                      general_inverse = None, noiser=None):
+                      general_inverse = None, noiser=None,
+                      ffhq256=False):
         device = self.model.betas.device
         b = shape[0]
         if x_T is None:
@@ -168,7 +171,8 @@ class DDIMSampler(object):
                                       ip_mask = ip_mask, measurements = measurements, operator = operator, gamma = gamma,
                                       inpainting=inpainting, omega=omega,
                                       gamma_scale = index/total_steps,
-                                      general_inverse=general_inverse, noiser=noiser)
+                                      general_inverse=general_inverse, noiser=noiser,
+                                      ffhq256=ffhq256)
             img, pred_x0 = outs
             if callback: callback(i)
             if img_callback: img_callback(pred_x0, i)
@@ -185,15 +189,15 @@ class DDIMSampler(object):
                       unconditional_guidance_scale=1., unconditional_conditioning=None,
                       ip_mask=None, measurements = None, operator = None, gamma=1, inpainting=False,
                       gamma_scale = None, omega = 1e-1,
-                      general_inverse=False,noiser=None):
+                      general_inverse=False,noiser=None,
+                      ffhq256=False):
         b, *_, device = *x.shape, x.device
            
         ##########################################
         ## measurment consistency guided diffusion
         ##########################################
-        # print('Check:', inpainting)
         if inpainting:
-            #print('Entering the measurement block...')
+            # print('Running inpainting module...')
             z_t = torch.clone(x.detach())
             z_t.requires_grad = True
             
@@ -250,18 +254,20 @@ class DDIMSampler(object):
             inpainted_image = parallel_project + ortho_project
             
             
-            encoded_z_0 = self.model.encode_first_stage(inpainted_image).mean  
+            # encoded_z_0 = self.model.encode_first_stage(inpainted_image) if ffhq256 else self.model.encode_first_stage(inpainted_image) 
+            encoded_z_0 = self.model.encode_first_stage(inpainted_image)
             encoded_z_0 = self.model.get_first_stage_encoding(encoded_z_0)
             inpaint_error = torch.linalg.norm(encoded_z_0 - pred_z_0)
             
             error = inpaint_error * gamma + meas_error * omega
             gradients = torch.autograd.grad(error, inputs=z_t)[0]
             z_prev = z_prev - gradients
-            print('Error: ', error.item())
+            print('Loss: ', error.item())
             
             return z_prev.detach(), pred_z_0.detach()
         
         elif general_inverse:
+            # print('Running general inverse module...')
             z_t = torch.clone(x.detach())
             z_t.requires_grad = True
             
@@ -317,7 +323,8 @@ class DDIMSampler(object):
             parallel_project = operator.transpose(measurements)
             inpainted_image = parallel_project + ortho_project
             
-            encoded_z_0 = self.model.encode_first_stage(inpainted_image) 
+            # encoded_z_0 = self.model.encode_first_stage(inpainted_image) if ffhq256 else self.model.encode_first_stage(inpainted_image).mean  
+            encoded_z_0 = self.model.encode_first_stage(inpainted_image)
             encoded_z_0 = self.model.get_first_stage_encoding(encoded_z_0)
             inpaint_error = torch.linalg.norm(encoded_z_0 - pred_z_0)
             
@@ -325,7 +332,7 @@ class DDIMSampler(object):
             
             gradients = torch.autograd.grad(error, inputs=z_t)[0]
             z_prev = z_prev - gradients
-            print('Error: ', error.item())
+            print('Loss: ', error.item())
             
             return z_prev.detach(), pred_z_0.detach()
         
@@ -363,7 +370,7 @@ class DDIMSampler(object):
             # current prediction for x_0
             pred_x0 = (x - sqrt_one_minus_at * e_t) / a_t.sqrt()
             if quantize_denoised:
-                ## lr
+                ## 
                 with torch.no_grad():
                     pred_x0, _, *_ = self.model.first_stage_model.quantize(pred_x0)
             # direction pointing to x_t

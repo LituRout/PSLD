@@ -294,6 +294,11 @@ def main():
         action='store_true',
         help='downsample result to 256',
     )
+    parser.add_argument(
+        "--ffhq256",
+        action='store_true',
+        help='load SD weights trained on FFHQ',
+    )
     ##
 
     opt = parser.parse_args()
@@ -305,6 +310,12 @@ def main():
         opt.ckpt = "models/ldm/text2img-large/model.ckpt"
         opt.outdir = "outputs/txt2img-samples-laion400m"
 
+    ## 
+    if opt.ffhq256:
+        print("Using FFHQ 256 finetuned model...")
+        opt.config = "models/ldm/ffhq256/config.yaml"
+        opt.ckpt = "models/ldm/ffhq256/model.ckpt"
+    ##
     
     seed_everything(opt.seed)
 
@@ -437,29 +448,49 @@ def main():
             for n in trange(opt.n_iter, desc="Sampling"):
                 for prompts in tqdm(data, desc="data"):
                     uc = None
-                    if opt.scale != 1.0:
-                        uc = model.get_learned_conditioning(batch_size * [""])
-                    if isinstance(prompts, tuple):
-                        prompts = list(prompts)
-                    c = model.get_learned_conditioning(prompts)
-                    shape = [opt.C, opt.H // opt.f, opt.W // opt.f]
-                    samples_ddim, _ = sampler.sample(S=opt.ddim_steps,
-                                                    conditioning=c,
-                                                    batch_size=opt.n_samples,
-                                                    shape=shape,
-                                                    verbose=False,
-                                                    unconditional_guidance_scale=opt.scale,
-                                                    unconditional_conditioning=uc,
-                                                    eta=opt.ddim_eta,
-                                                    x_T=start_code,
-                                                    ip_mask = mask,
-                                                    measurements = y_n,
-                                                    operator = operator,
-                                                    gamma = opt.gamma,
-                                                    inpainting = opt.inpainting,
-                                                    omega = opt.omega,
-                                                    general_inverse=opt.general_inverse,
-                                                    noiser=noiser)
+                    if opt.ffhq256:
+                        shape = [opt.C, opt.H // opt.f, opt.W // opt.f]
+                        samples_ddim, _ = sampler.sample(S=opt.ddim_steps,
+                                                        batch_size=opt.n_samples,
+                                                        shape=shape,
+                                                        verbose=False,
+                                                        eta=opt.ddim_eta,
+                                                        x_T=start_code,
+                                                        ip_mask = mask,
+                                                        measurements = y_n,
+                                                        operator = operator,
+                                                        gamma = opt.gamma,
+                                                        inpainting = opt.inpainting,
+                                                        omega = opt.omega,
+                                                        general_inverse=opt.general_inverse,
+                                                        noiser=noiser,
+                                                        ffhq256=opt.ffhq256)
+                    else:
+                        # pdb.set_trace()
+                        if opt.scale != 1.0 :
+                            uc = model.get_learned_conditioning(batch_size * [""])
+                        if isinstance(prompts, tuple):
+                            prompts = list(prompts)
+                        c = model.get_learned_conditioning(prompts)
+                        shape = [opt.C, opt.H // opt.f, opt.W // opt.f]
+                        samples_ddim, _ = sampler.sample(S=opt.ddim_steps,
+                                                        conditioning=c,
+                                                        batch_size=opt.n_samples,
+                                                        shape=shape,
+                                                        verbose=False,
+                                                        unconditional_guidance_scale=opt.scale,
+                                                        unconditional_conditioning=uc,
+                                                        eta=opt.ddim_eta,
+                                                        x_T=start_code,
+                                                        ip_mask = mask,
+                                                        measurements = y_n,
+                                                        operator = operator,
+                                                        gamma = opt.gamma,
+                                                        inpainting = opt.inpainting,
+                                                        omega = opt.omega,
+                                                        general_inverse=opt.general_inverse,
+                                                        noiser=noiser)
+
 
                     x_samples_ddim = model.decode_first_stage(samples_ddim)
                     x_samples_ddim = torch.clamp((x_samples_ddim + 1.0) / 2.0, min=0.0, max=1.0)
