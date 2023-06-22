@@ -1,6 +1,6 @@
 # Solving Inverse Problems Provably via Posterior Sampling with Latent Diffusion Models
 
-The repository contains reproducible `PyTorch` source code of our paper [Solving Inverse Problems Provably via Posterior Sampling with Latent Diffusion Models](link). We present the first framework to solve general inverse problems leveraging pre-trained \textit{latent} diffusion models.  Previously proposed algorithms (such as DPS and DDRM) only apply to *pixel-space* diffusion models.  We theoretically analyze our algorithm showing provable sample recovery in a linear model setting. The algorithmic insight obtained from our analysis extends to more general settings often considered in practice. Experimentally, we outperform previously proposed posterior sampling algorithms in a wide variety of problems including random inpainting, block inpainting, denoising, deblurring, destriping, and super-resolution.
+The repository contains reproducible `PyTorch` source code of our paper [Solving Inverse Problems Provably via Posterior Sampling with Latent Diffusion Models](link). We present the first framework to solve general inverse problems leveraging pre-trained *latent* diffusion models.  Previously proposed algorithms (such as DPS and DDRM) only apply to *pixel-space* diffusion models.  We theoretically analyze our algorithm showing provable sample recovery in a linear model setting. The algorithmic insight obtained from our analysis extends to more general settings often considered in practice. Experimentally, we outperform previously proposed posterior sampling algorithms in a wide variety of problems including random inpainting, block inpainting, denoising, deblurring, destriping, and super-resolution.
 
 ## Comparison with state-of-the-art commercial services leveraging Stable Diffusion
 
@@ -8,22 +8,30 @@ The repository contains reproducible `PyTorch` source code of our paper [Solving
 
 
 ## Prerequisites
-The implementation is GPU-based. Single GPU (A100) is sufficient to run each experiment. Tested with 
+The implementation is GPU-based. A single GPU (A100) is sufficient to run all experiments. Tested with 
 `torch==1.12.0 torchvision==0.13.1a0`. To reproduce the reported results, consider using the exact version of `PyTorch` and its required dependencies as other versions might be incompatible. Make sure to install all the required packages for [`/diffusion-posterior-sampling/`](https://github.com/LituRout/PSLD/tree/main/diffusion-posterior-sampling) and [`/stable-diffusion/`](https://github.com/LituRout/PSLD/tree/main/stable-diffusion). Check if the DPS sampler and Stable Diffusion sampler are working before proceeding to the next steps.
 
 ## Repository structure
 All the experiments are issued in the form of pretty self-explanatory `python` codes. To execute each code, we provide shell scripts inside `stable-diffusion/run/` folder. 
 
 ### Main Experiments
-Execute the following commands inside the `stable-diffuson` folder.
+Execute the following commands inside the `stable-diffusion` folder.
 
-**Posterior Sampling**
+**Posterior Sampling using Stable Diffusion V-1.4**
 
-- `sh run/inverse.sh` for super-resolution (4x) task. 
+- `sh run/inverse.sh` for super-resolution task. 
 - `sh run/inverse_rip.sh` for random inpainting task.
 - `sh run/inverse_gb.sh` for Gaussian deblur task
 - `sh run/inverse_mb.sh` for motion deblur task.
 - `sh run/inverse_bip.sh` for box inpainting task.
+
+**Posterior Sampling using Latent Diffusion VQ-4**
+
+- `sh run/inverse_sr_ldm.sh` for super-resolution task. 
+- `sh run/inverse_rip_ldm.sh` for random inpainting task.
+- `sh run/inverse_gb_ldm.sh` for Gaussian deblur task
+- `sh run/inverse_mb_ldm.sh` for motion deblur task.
+- `sh run/inverse_bip_ldm.sh` for box inpainting task.
 
 ## Evaluation
 **Results on Super-resolution**
@@ -35,6 +43,7 @@ Execute the following commands inside the `stable-diffuson` folder.
 
 **Results on Gaussian Deblur**
 <p align="center"><img src="pics/image-gb.png" width="700" /></p>
+
 
 **Results on Motion Deblur**
 <p align="center"><img src="pics/image-mb.png" width="700" /></p>
