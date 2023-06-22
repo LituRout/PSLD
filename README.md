@@ -15,13 +15,13 @@ The implementation is GPU-based. A single GPU (A100) is sufficient to run all ex
 All the experiments are issued in the form of pretty self-explanatory `python` codes. To execute each code, we provide shell scripts inside `stable-diffusion/run/` folder. 
 
 ### Main Experiments
-Execute the following commands inside the `stable-diffusion` folder.
+Execute the following commands inside the `stable-diffusion` folder. We recommend tuning `gamma` and `omega` for better performance and for solving general (linear) inverse problems on various datasets. 
 
 **Posterior Sampling using Stable Diffusion V-1.4**
 
 - `sh run/inverse.sh` for super-resolution task. 
 - `sh run/inverse_rip.sh` for random inpainting task.
-- `sh run/inverse_gb.sh` for Gaussian deblur task
+- `sh run/inverse_gb.sh` for Gaussian deblur task.
 - `sh run/inverse_mb.sh` for motion deblur task.
 - `sh run/inverse_bip.sh` for box inpainting task.
 
@@ -29,7 +29,7 @@ Execute the following commands inside the `stable-diffusion` folder.
 
 - `sh run/inverse_sr_ldm.sh` for super-resolution task. 
 - `sh run/inverse_rip_ldm.sh` for random inpainting task.
-- `sh run/inverse_gb_ldm.sh` for Gaussian deblur task
+- `sh run/inverse_gb_ldm.sh` for Gaussian deblur task.
 - `sh run/inverse_mb_ldm.sh` for motion deblur task.
 - `sh run/inverse_bip_ldm.sh` for box inpainting task.
 
@@ -60,3 +60,15 @@ Execute the following commands inside the `stable-diffusion` folder.
 
 
 
+## Citation
+If you find our work interesting, please consider citing
+
+```
+@inproceedings{
+rout2023solving,
+title={Solving Inverse Problems Provably via Posterior Sampling with Latent Diffusion Models},
+author={Litu Rout and Negin Raoof and Giannis Daras and Constantine Caramanis and Alexandros G. Dimakis and Sanjay Shakkottai},
+booktitle={ArXiv},
+year={2023}
+}
+```
