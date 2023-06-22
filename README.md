@@ -52,10 +52,10 @@ Execute the following commands inside the `stable-diffusion` folder. We recommen
 ## Credits
 - [FFHQ (256x256)](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) for in-distribution samples;
 - [ImageNet (256x256)](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) for out-of-distribution samples;
-- [FID repository](https://github.com/mseitzer/pytorch-fid) to compute **FID** score;
-- [Stable Diffusion](https://github.com/CompVis/stable-diffusion) for the generative foundation model;
-- [DPS](https://github.com/DPS2022/diffusion-posterior-sampling) for the DPS baseline and measurement operators;
-- [Latent Diffusion](https://github.com/CompVis/latent-diffusion) for the generative latent diffusion model;
+- [FID repository](https://github.com/mseitzer/pytorch-fid) for computing **FID** score;
+- [Stable Diffusion](https://github.com/CompVis/stable-diffusion) for generative foundation model;
+- [DPS](https://github.com/DPS2022/diffusion-posterior-sampling) for DPS baseline and measurement operators;
+- [Latent Diffusion](https://github.com/CompVis/latent-diffusion) for LDM pretrained weights;
 - [RePaint](https://github.com/andreas128/RePaint) for measurement operators.
 
 
