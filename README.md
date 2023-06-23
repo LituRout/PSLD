@@ -3,8 +3,10 @@
 The repository contains reproducible `PyTorch` source code of our paper [Solving Inverse Problems Provably via Posterior Sampling with Latent Diffusion Models](link). We present the first framework to solve general inverse problems leveraging pre-trained *latent* diffusion models.  Previously proposed algorithms (such as DPS and DDRM) only apply to *pixel-space* diffusion models.  We theoretically analyze our algorithm showing provable sample recovery in a linear model setting. The algorithmic insight obtained from our analysis extends to more general settings often considered in practice. Experimentally, we outperform previously proposed posterior sampling algorithms in a wide variety of problems including random inpainting, block inpainting, denoising, deblurring, destriping, and super-resolution.
 
 ## Comparison with state-of-the-art commercial services leveraging Stable Diffusion
+This experiment was performed on commercial platforms that use (to the best of our knowledge) Stable diffusion and additional proprietary models. This evaluation was performed on models deployed in May 2023 and may change as  commercial providers improve their platforms.
 
 <p align="center"><img src="pics/image.png" width="700" /></p>
+
 
 
 ## Prerequisites
@@ -50,12 +52,12 @@ Execute the following commands inside the `stable-diffusion` folder. We recommen
 
 
 ## Credits
-- [FFHQ (256x256)](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) for in-distribution samples;
-- [ImageNet (256x256)](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) for out-of-distribution samples;
-- [FID repository](https://github.com/mseitzer/pytorch-fid) for computing **FID** score;
-- [Stable Diffusion](https://github.com/CompVis/stable-diffusion) for generative foundation model;
-- [DPS](https://github.com/DPS2022/diffusion-posterior-sampling) for DPS baseline and measurement operators;
-- [Latent Diffusion](https://github.com/CompVis/latent-diffusion) for LDM pretrained weights;
+- [FFHQ (256x256)](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) for in-distribution samples
+- [ImageNet (256x256)](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) for out-of-distribution samples
+- [FID repository](https://github.com/mseitzer/pytorch-fid) for computing **FID** score
+- [Stable Diffusion](https://github.com/CompVis/stable-diffusion) for generative foundation model
+- [DPS](https://github.com/DPS2022/diffusion-posterior-sampling) for DPS baseline and measurement operators
+- [Latent Diffusion](https://github.com/CompVis/latent-diffusion) for LDM pretrained weights
 - [RePaint](https://github.com/andreas128/RePaint) for measurement operators.
 
 
