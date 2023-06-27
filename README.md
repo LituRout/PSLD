@@ -11,7 +11,7 @@ This experiment was performed on commercial platforms that use (to the best of o
 
 ## Prerequisites
 The implementation is GPU-based. A single GPU (A100) is sufficient to run all experiments. Tested with 
-`torch==1.12.0 torchvision==0.13.1a0`. To reproduce the reported results, consider using the exact version of `PyTorch` and its required dependencies as other versions might be incompatible. Make sure to install all the required packages for [`/diffusion-posterior-sampling/`](https://github.com/LituRout/PSLD/tree/main/diffusion-posterior-sampling) and [`/stable-diffusion/`](https://github.com/LituRout/PSLD/tree/main/stable-diffusion). Check if the DPS sampler and Stable Diffusion sampler are working before proceeding to the next steps.
+`torch==1.12.0 torchvision==0.13.1a0`. To reproduce the reported results, consider using the exact version of `PyTorch` and its required dependencies as other versions might be incompatible. Make sure to install all the required packages for [`/diffusion-posterior-sampling/`](https://github.com/LituRout/PSLD/tree/main/diffusion-posterior-sampling) and [`/stable-diffusion/`](https://github.com/LituRout/PSLD/tree/main/stable-diffusion). Check if the DPS sampler and Stable Diffusion sampler are working before proceeding to the next steps. Use the latest version of generative foundation model ([Stable Diffusion v1-5 Model Card, as of May 2023](https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.ckpt)) to get better performance.
 
 ## Repository structure
 All the experiments are issued in the form of pretty self-explanatory `python` codes. To execute each code, we provide shell scripts inside `stable-diffusion/run/` folder. 
@@ -19,7 +19,7 @@ All the experiments are issued in the form of pretty self-explanatory `python` c
 ### Main Experiments
 Execute the following commands inside the `stable-diffusion` folder. We recommend tuning `gamma` and `omega` for better performance and for solving general (linear) inverse problems on various datasets. 
 
-**Posterior Sampling using Stable Diffusion V-1.4**
+**Posterior Sampling using Stable Diffusion**
 
 - `sh run/inverse.sh` for super-resolution task. 
 - `sh run/inverse_rip.sh` for random inpainting task.
@@ -27,7 +27,7 @@ Execute the following commands inside the `stable-diffusion` folder. We recommen
 - `sh run/inverse_mb.sh` for motion deblur task.
 - `sh run/inverse_bip.sh` for box inpainting task.
 
-**Posterior Sampling using Latent Diffusion VQ-4**
+**Posterior Sampling using Latent Diffusion**
 
 - `sh run/inverse_sr_ldm.sh` for super-resolution task. 
 - `sh run/inverse_rip_ldm.sh` for random inpainting task.
@@ -52,12 +52,13 @@ Execute the following commands inside the `stable-diffusion` folder. We recommen
 
 
 ## Credits
-- [FFHQ (256x256)](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) for in-distribution samples
-- [ImageNet (256x256)](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) for out-of-distribution samples
-- [FID repository](https://github.com/mseitzer/pytorch-fid) for computing **FID** score
-- [Stable Diffusion](https://github.com/CompVis/stable-diffusion) for generative foundation model
-- [DPS](https://github.com/DPS2022/diffusion-posterior-sampling) for DPS baseline and measurement operators
-- [Latent Diffusion](https://github.com/CompVis/latent-diffusion) for LDM pretrained weights
+- [FFHQ (256x256)](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) for in-distribution samples.
+- [ImageNet (256x256)](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) for out-of-distribution samples.
+- [FID repository](https://github.com/mseitzer/pytorch-fid) for computing **FID** score.
+- [CompVis/Stable Diffusion](https://github.com/CompVis/stable-diffusion) for generative foundation model.
+- [runwayml/stable Diffusion](https://github.com/runwayml/stable-diffusion) for Stable Diffusion v1-5 pretrained weights.
+- [DPS](https://github.com/DPS2022/diffusion-posterior-sampling) for DPS baseline and measurement operators.
+- [Latent Diffusion](https://github.com/CompVis/latent-diffusion) for LDM pretrained weights.
 - [RePaint](https://github.com/andreas128/RePaint) for measurement operators.
 
 
