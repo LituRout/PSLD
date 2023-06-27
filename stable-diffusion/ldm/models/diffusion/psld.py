@@ -8,6 +8,7 @@ from functools import partial
 from ldm.modules.diffusionmodules.util import make_ddim_sampling_parameters, make_ddim_timesteps, noise_like, \
     extract_into_tensor
 
+import pdb
 
 class DDIMSampler(object):
     def __init__(self, model, schedule="linear", **kwargs):
@@ -253,9 +254,9 @@ class DDIMSampler(object):
             parallel_project = operator.transpose(measurements)
             inpainted_image = parallel_project + ortho_project
             
-            
+            # pdb.set_trace()
             # encoded_z_0 = self.model.encode_first_stage(inpainted_image) if ffhq256 else self.model.encode_first_stage(inpainted_image) 
-            encoded_z_0 = self.model.encode_first_stage(inpainted_image)
+            encoded_z_0 = self.model.encode_first_stage(inpainted_image.type(torch.float32))
             encoded_z_0 = self.model.get_first_stage_encoding(encoded_z_0)
             inpaint_error = torch.linalg.norm(encoded_z_0 - pred_z_0)
             

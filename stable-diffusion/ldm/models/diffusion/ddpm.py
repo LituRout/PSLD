@@ -240,7 +240,7 @@ class DDPM(pl.LightningModule):
         model_mean, posterior_variance, posterior_log_variance = self.q_posterior(x_start=x_recon, x_t=x, t=t)
         return model_mean, posterior_variance, posterior_log_variance
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def p_sample(self, x, t, clip_denoised=True, repeat_noise=False):
         b, *_, device = *x.shape, x.device
         model_mean, _, model_log_variance = self.p_mean_variance(x=x, t=t, clip_denoised=clip_denoised)
@@ -249,7 +249,7 @@ class DDPM(pl.LightningModule):
         nonzero_mask = (1 - (t == 0).float()).reshape(b, *((1,) * (len(x.shape) - 1)))
         return model_mean + nonzero_mask * (0.5 * model_log_variance).exp() * noise
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def p_sample_loop(self, shape, return_intermediates=False):
         device = self.betas.device
         b = shape[0]
@@ -264,7 +264,7 @@ class DDPM(pl.LightningModule):
             return img, intermediates
         return img
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def sample(self, batch_size=16, return_intermediates=False):
         image_size = self.image_size
         channels = self.channels
@@ -354,7 +354,7 @@ class DDPM(pl.LightningModule):
 
         return loss
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def validation_step(self, batch, batch_idx):
         _, loss_dict_no_ema = self.shared_step(batch)
         with self.ema_scope():
@@ -374,7 +374,7 @@ class DDPM(pl.LightningModule):
         denoise_grid = make_grid(denoise_grid, nrow=n_imgs_per_row)
         return denoise_grid
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def log_images(self, batch, N=8, n_row=2, sample=True, return_keys=None, **kwargs):
         log = dict()
         x = self.get_input(batch, self.first_stage_key)
@@ -474,7 +474,7 @@ class LatentDiffusion(DDPM):
         self.cond_ids[:self.num_timesteps_cond] = ids
 
     @rank_zero_only
-    @torch.no_grad()
+    # @torch.no_grad()
     def on_train_batch_start(self, batch, batch_idx, dataloader_idx):
         # only for very first batch
         if self.scale_by_std and self.current_epoch == 0 and self.global_step == 0 and batch_idx == 0 and not self.restarted_from_ckpt:
@@ -650,7 +650,7 @@ class LatentDiffusion(DDPM):
 
         return fold, unfold, normalization, weighting
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def get_input(self, batch, k, return_first_stage_outputs=False, force_c_encode=False,
                   cond_key=None, return_original_cond=False, bs=None):
         x = super().get_input(batch, k)
@@ -702,7 +702,7 @@ class LatentDiffusion(DDPM):
             out.append(xc)
         return out
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def decode_first_stage(self, z, predict_cids=False, force_not_quantize=False):
         if predict_cids:
             if z.dim() == 4:
@@ -822,7 +822,7 @@ class LatentDiffusion(DDPM):
             else:
                 return self.first_stage_model.decode(z)
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def encode_first_stage(self, x):
         if hasattr(self, "split_input_params"):
             if self.split_input_params["patch_distributed_vq"]:
@@ -1075,7 +1075,7 @@ class LatentDiffusion(DDPM):
         else:
             return model_mean, posterior_variance, posterior_log_variance
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def p_sample(self, x, c, t, clip_denoised=False, repeat_noise=False,
                  return_codebook_ids=False, quantize_denoised=False, return_x0=False,
                  temperature=1., noise_dropout=0., score_corrector=None, corrector_kwargs=None):
@@ -1106,7 +1106,7 @@ class LatentDiffusion(DDPM):
         else:
             return model_mean + nonzero_mask * (0.5 * model_log_variance).exp() * noise
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def progressive_denoising(self, cond, shape, verbose=True, callback=None, quantize_denoised=False,
                               img_callback=None, mask=None, x0=None, temperature=1., noise_dropout=0.,
                               score_corrector=None, corrector_kwargs=None, batch_size=None, x_T=None, start_T=None,
@@ -1162,7 +1162,7 @@ class LatentDiffusion(DDPM):
             if img_callback: img_callback(img, i)
         return img, intermediates
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def p_sample_loop(self, cond, shape, return_intermediates=False,
                       x_T=None, verbose=True, callback=None, timesteps=None, quantize_denoised=False,
                       mask=None, x0=None, img_callback=None, start_T=None,
@@ -1213,7 +1213,7 @@ class LatentDiffusion(DDPM):
             return img, intermediates
         return img
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def sample(self, cond, batch_size=16, return_intermediates=False, x_T=None,
                verbose=True, timesteps=None, quantize_denoised=False,
                mask=None, x0=None, shape=None,**kwargs):
@@ -1231,7 +1231,7 @@ class LatentDiffusion(DDPM):
                                   verbose=verbose, timesteps=timesteps, quantize_denoised=quantize_denoised,
                                   mask=mask, x0=x0)
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def sample_log(self,cond,batch_size,ddim, ddim_steps,**kwargs):
 
         if ddim:
@@ -1247,7 +1247,7 @@ class LatentDiffusion(DDPM):
         return samples, intermediates
 
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def log_images(self, batch, N=8, n_row=4, sample=True, ddim_steps=200, ddim_eta=1., return_keys=None,
                    quantize_denoised=True, inpaint=True, plot_denoise_rows=False, plot_progressive_rows=True,
                    plot_diffusion_rows=True, **kwargs):
@@ -1382,7 +1382,7 @@ class LatentDiffusion(DDPM):
             return [opt], scheduler
         return opt
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def to_rgb(self, x):
         x = x.float()
         if not hasattr(self, "colorize"):
