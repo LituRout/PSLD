@@ -812,7 +812,7 @@ class FirstStagePostProcessor(nn.Module):
             param.requires_grad = False
 
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def encode_with_pretrained(self,x):
         c = self.pretrained_model.encode(x)
         if isinstance(c, DiagonalGaussianDistribution):

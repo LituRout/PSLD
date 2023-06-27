@@ -66,7 +66,7 @@ class BERTTokenizer(AbstractEncoder):
         tokens = batch_encoding["input_ids"].to(self.device)
         return tokens
 
-    @torch.no_grad()
+    # @torch.no_grad()
     def encode(self, text):
         tokens = self(text)
         if not self.vq_interface:
