@@ -116,7 +116,7 @@ def main():
     )
     parser.add_argument(
         "--skip_grid",
-        action='store_true',
+        action='store_false',
         help="do not save a grid, only individual samples. Helpful when evaluating lots of samples",
     )
     parser.add_argument(
@@ -308,8 +308,7 @@ def main():
         print("Falling back to LAION 400M model...")
         opt.config = "configs/latent-diffusion/txt2img-1p4B-eval.yaml"
         opt.ckpt = "models/ldm/text2img-large/model.ckpt"
-        opt.outdir = "outputs/txt2img-samples-laion400m"
-
+        
     ## 
     if opt.ffhq256:
         print("Using FFHQ 256 finetuned model...")
