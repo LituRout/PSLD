@@ -76,9 +76,10 @@ If you find our work interesting, please consider citing
 ```
 @inproceedings{
 rout2023solving,
-title={Solving Inverse Problems Provably via Posterior Sampling with Latent Diffusion Models},
-author={Litu Rout and Negin Raoof and Giannis Daras and Constantine Caramanis and Alexandros G. Dimakis and Sanjay Shakkottai},
-booktitle={ArXiv},
-year={2023}
+title={Solving Linear Inverse Problems Provably via Posterior Sampling with Latent Diffusion Models},
+author={Litu Rout and Negin Raoof and Giannis Daras and Constantine Caramanis and Alex Dimakis and Sanjay Shakkottai},
+booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
+year={2023},
+url={https://openreview.net/forum?id=XKBFdYwfRo}
 }
 ```
