@@ -503,10 +503,21 @@ def main():
                     
                     if not opt.skip_save:
                         for x_sample in x_checked_image_torch:
-                            x_sample = 255. * rearrange(x_sample.cpu().numpy(), 'c h w -> h w c')
-                            img = Image.fromarray(x_sample.astype(np.uint8))
-                            # img = put_watermark(img, wm_encoder)
-                            img.save(os.path.join(sample_path, f"{base_count:05}.png"))
+                            if opt.inpainting:  # Inpainting gluing logic as in SD inpaint.py
+                                image = torch.clamp((org_image+1.0)/2.0, min=0.0, max=1.0)
+                                image = image.cpu().numpy()
+
+                                mask = mask.cpu().numpy()
+                                
+                                inpainted = (1-mask)*image+mask*x_sample.cpu().numpy()
+                                inpainted = inpainted.transpose(0,2,3,1)[0]*255
+                                Image.fromarray(inpainted.astype(np.uint8)).save(os.path.join(sample_path, f"{base_count:05}.png"))
+                            else:
+                                x_sample = 255. * rearrange(x_sample.cpu().numpy(), 'c h w -> h w c')
+                                img = Image.fromarray(x_sample.astype(np.uint8))
+                                # img = put_watermark(img, wm_encoder)
+                                img.save(os.path.join(sample_path, f"temp_{base_count:05}.png"))
+
                             base_count += 1
 
                     if not opt.skip_grid:
