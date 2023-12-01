@@ -36,10 +36,7 @@ Execute the following commands inside the `stable-diffusion` folder. We recommen
 
 **Posterior Sampling using Latent Diffusion**
 
-- `sh run/inverse_sr_ldm.sh` for super-resolution task. 
 - `sh run/inverse_rip_ldm.sh` for random inpainting task.
-- `sh run/inverse_gb_ldm.sh` for Gaussian deblur task.
-- `sh run/inverse_mb_ldm.sh` for motion deblur task.
 - `sh run/inverse_bip_ldm.sh` for box inpainting task.
 
 ## Evaluation
