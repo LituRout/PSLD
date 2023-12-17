@@ -509,7 +509,7 @@ def main():
                                 image = torch.clamp((org_image+1.0)/2.0, min=0.0, max=1.0)
                                 # image = image.cpu().numpy()
                                 
-                                ortho_project = x_checked_image_torch - operator.transpose(operator.forward(x_checked_image_torch, mask=ip_mask))
+                                ortho_project = x_checked_image_torch - operator.transpose(operator.forward(x_checked_image_torch, mask=mask))
                                 parallel_project = operator.transpose(y_n)
                                 inpainted_image = parallel_project + ortho_project
             
