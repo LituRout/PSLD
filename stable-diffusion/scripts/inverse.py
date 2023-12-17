@@ -502,12 +502,12 @@ def main():
                     
                     
                     if not opt.skip_save:
+                        mask = mask.cpu().numpy()
+                        
                         for x_sample in x_checked_image_torch:
                             if opt.inpainting:  # Inpainting gluing logic as in SD inpaint.py
                                 image = torch.clamp((org_image+1.0)/2.0, min=0.0, max=1.0)
                                 image = image.cpu().numpy()
-
-                                mask = mask.cpu().numpy()
                                 
                                 inpainted = (1-mask)*image+mask*x_sample.cpu().numpy()
                                 inpainted = inpainted.transpose(0,2,3,1)[0]*255
