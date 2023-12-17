@@ -507,9 +507,13 @@ def main():
                         for x_sample in x_checked_image_torch:
                             if opt.inpainting:  # Inpainting gluing logic as in SD inpaint.py
                                 image = torch.clamp((org_image+1.0)/2.0, min=0.0, max=1.0)
-                                image = image.cpu().numpy()
+                                # image = image.cpu().numpy()
                                 
-                                inpainted = (1-mask)*image+mask*x_sample.cpu().numpy()
+                                ortho_project = x_checked_image_torch - operator.transpose(operator.forward(x_checked_image_torch, mask=ip_mask))
+                                parallel_project = operator.transpose(y_n)
+                                inpainted_image = parallel_project + ortho_project
+            
+                                inpainted = inpainted_image.cpu().numpy()
                                 inpainted = inpainted.transpose(0,2,3,1)[0]*255
                                 Image.fromarray(inpainted.astype(np.uint8)).save(os.path.join(sample_path, f"{base_count:05}.png"))
                             else:
